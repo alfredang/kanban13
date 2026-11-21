@@ -1,0 +1,9 @@
+.env*
+*.pem
+*.key
+credentials*
+.claude/settings.local.json
+node_modules/
+_site/
+.DS_Store
+Thumbs.db

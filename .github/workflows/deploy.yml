@@ -15,7 +15,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax-check inline script
+        run: |
+          node -e '
+            const fs = require("fs");
+            const html = fs.readFileSync("index.html", "utf8");
+            const m = html.match(/<script>([\s\S]*?)<\/script>/);
+            if (!m) { console.error("No inline <script> found"); process.exit(1); }
+            fs.writeFileSync("check.js", m[1]);
+          '
+          node --check check.js
+
   deploy:
+    needs: check
     runs-on: ubuntu-latest
     environment:
       name: github-pages
